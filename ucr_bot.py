@@ -28,7 +28,7 @@ def state_total(list_name, state_name, crime_selector, population_selector):
             city_counter += 1
     return [city_counter, crime_counter, population_counter]
 
-def print_cities(list_name, state_name, number_of_cities, state_crime_rate):
+def print_cities(list_name, state_name, number_of_cities, state_crime_rate_2012):
     for current_city in list_name:
         selected_state = current_city[0]
         if state_name == selected_state and current_city[6]:
@@ -41,17 +41,29 @@ def print_cities(list_name, state_name, number_of_cities, state_crime_rate):
 
             # Comparison to last year
             if city_rate_change > 0:
-                print "This is a %.2f percent increase from the rate of %.2f per 100,000 in 2011.\n" % (abs(city_rate_change),city_rate_2011)
+                print "This is a %.2f percent increase from the rate of %.2f per 100,000 in 2011." % (abs(city_rate_change),city_rate_2011)
             elif city_rate_change < 0:
-                print "This is a %.2f percent decrease from the rate of %.2f per 100,000 in 2011.\n" % (abs(city_rate_change),city_rate_2011)
+                print "This is a %.2f percent decrease from the rate of %.2f per 100,000 in 2011." % (abs(city_rate_change),city_rate_2011)
             else:
                 print "The 2011 rate is the same.\n"
 
             # Comparison to state
             if number_of_cities == 1:
                 print "%s is the primary source of rape statistics for %s\n" % (current_city[2], selected_state)
-
+            elif number_of_cities > 1:
+                city_state_difference = percent_change(city_rate_2012, state_crime_rate_2012)
+                if city_state_difference == 0:
+                    print "This is right on par with the rest of the state of %s" % (selected_state)
+                elif city_state_difference > 0:
+                    print "This is %.2f percent greater than the %s state rate of %.2f rapes per 100,000." % (abs(city_state_difference), selected_state, state_crime_rate_2012)
+                elif city_state_difference < 0:
+                    print "This is %.2f percent lower than the %s state rate of %.2f rapes per 100,000." % (abs(city_state_difference), selected_state, state_crime_rate_2012)
+                else:
+                    print "Huh? Program error.\n You done messed up A-A-Ron!"
+            else:
+                print "Huh? Program error.\n You done messed up A-A-Ron!"
             # End Comparison
+            print "\n"
           #  print city_rate_2012
 
     return
@@ -73,7 +85,7 @@ for row in state_reader:
 # Loop through all states in list
 for state in state_list:
     selected_state = state[0]
-    print "================"
+    print "================================================"
     print selected_state
     print "----------------"
     state_stats_2012 = state_total(city_list, selected_state, 6, 3)

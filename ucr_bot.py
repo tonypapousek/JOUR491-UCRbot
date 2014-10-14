@@ -33,8 +33,27 @@ def print_cities(list_name, state_name, number_of_cities, state_crime_rate):
         selected_state = current_city[0]
         if state_name == selected_state and current_city[6]:
             city_rate_2012 = crime_rate(current_city[6], current_city[3])
-          #  print city_rate_2012
+            city_rate_2011 = crime_rate(current_city[17], current_city[14])
+            city_rate_change = percent_change(city_rate_2011, city_rate_2012)
+
+            # Print current year stats
             print "In 2012, there were %.2f counts of forcible rapes per 100,000 people in %s, %s." % (city_rate_2012, current_city[2], selected_state)
+
+            # Comparison to last year
+            if city_rate_change > 0:
+                print "This is a %.2f percent increase from the rate of %.2f per 100,000 in 2011.\n" % (abs(city_rate_change),city_rate_2011)
+            elif city_rate_change < 0:
+                print "This is a %.2f percent decrease from the rate of %.2f per 100,000 in 2011.\n" % (abs(city_rate_change),city_rate_2011)
+            else:
+                print "The 2011 rate is the same.\n"
+
+            # Comparison to state
+            if number_of_cities == 1:
+                print "%s is the primary source of rape statistics for %s\n" % (current_city[2], selected_state)
+
+            # End Comparison
+          #  print city_rate_2012
+
     return
 
 # Read UCRdata.csv and put it in its own list
@@ -59,20 +78,15 @@ for state in state_list:
     print "----------------"
     state_stats_2012 = state_total(city_list, selected_state, 6, 3)
     if state_stats_2012[1] == 0:
-        print "There are no forcible rape statistics available for %s." % (selected_state)
+        print "There are no forcible rape statistics available for %s.\n" % (selected_state)
 
     elif state_stats_2012[1] != 0:
-        # grab state_stats for 2009 - 2011
+        # grab state_stats for 2011
         state_stats_2011 = state_total(city_list, selected_state, 17, 14)
-        state_stats_2010 = state_total(city_list, selected_state, 27, 24)
-        state_stats_2009 = state_total(city_list, selected_state, 37, 34)
 
-        # calculate crime_rate for 2009 - 2012
+        # calculate crime_rate for 2011 - 2012
         crime_rate_2012 = crime_rate(state_stats_2012[1], state_stats_2012[2])
         crime_rate_2011 = crime_rate(state_stats_2011[1], state_stats_2011[2])
-        crime_rate_2010 = crime_rate(state_stats_2010[1], state_stats_2010[2])
-        crime_rate_2009 = crime_rate(state_stats_2009[1], state_stats_2009[2])
-
 
         # calculate change is crime rate between 2012 and 2011
         crime_rate_change = percent_change(crime_rate_2011, crime_rate_2012)
@@ -86,6 +100,8 @@ for state in state_list:
             print "This is a %.2f percent decrease from the rate of %.2f per 100,000 in 2011.\n" % (abs(crime_rate_change),crime_rate_2011)
         else:
             print "The 2011 rate is the same.\n"
+
+        print ("----------------\nCrime by city:\n----------------\n" )
         print_cities(city_list, selected_state, state_stats_2012[0], crime_rate_2012)
 
     else:

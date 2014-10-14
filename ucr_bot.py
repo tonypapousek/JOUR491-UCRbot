@@ -25,29 +25,22 @@ def state_total(list_name, state_name, crime_selector, population_selector):
             population_counter += int(current_city[population_selector])
             city_counter += 1
     return [city_counter, crime_counter, population_counter]
-# Open csv file
+
+# Read UCRdata.csv and put it in its own list
 ucr_reader = csv.reader(open("UCRdata.csv", "rU"), dialect=csv.excel)
-
-# Skip header line
 ucr_reader.next()
-
-# Create empty list
 city_list = []
-
-# Throw all of csv in memory
 for row in ucr_reader:
     city_list.append(row)
 
-# Read state_names.csv and put it in it's own list
+# Read state_names.csv and put it in its own list
 state_reader = csv.reader(open("state_names.csv", "rU"))
 state_reader.next()
-
 state_list = []
-
 for row in state_reader:
     state_list.append(row)
 
-
+# Loop through all states in list
 for state in state_list:
     selected_state = state[0]
     print "================"

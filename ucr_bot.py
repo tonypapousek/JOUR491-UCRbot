@@ -8,6 +8,9 @@
 
 import csv, string, datetime
 
+def percent_change(old_value, new_value):
+    return ((new_value - old_value) / abs(old_value)) * 100
+
 def crime_rate(state_stats):
     return (float(state_stats[1]) / float(state_stats[2])) * 100000
 
@@ -63,7 +66,7 @@ for state in state_list:
         crime_rate_2009 = crime_rate(state_stats_2009)
 
         # calculate change is crime rate between 2012 and 2011
-        crime_rate_change = (crime_rate_2012 - crime_rate_2011) / abs(crime_rate_2011) * 100
+        crime_rate_change = percent_change(crime_rate_2011, crime_rate_2012)
 
         print "In 2012, there were %.2f counts of forcible rapes per 100,000 people in %s." % (crime_rate_2012, selected_state)
 

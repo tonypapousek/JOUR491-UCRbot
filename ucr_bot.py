@@ -1,12 +1,15 @@
 #! /usr/bin/env python
 
 # ucr_bot.py
-# Copyright © 2014 Tony Papousek <tony@papousek.org>
+# Copyright (c) 2014 Tony Papousek <tony@papousek.org>
 # This work is free. You can redistribute it and/or modify it under the
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See the LICENSE file for more details.
 
 import csv, string, datetime
+
+def crime_rate(state_stats):
+    return (float(state_stats[1]) / float(state_stats[2])) * 100000
 
 def state_total(list_name, state_name, crime_selector, population_selector):
     # Initialize counters
@@ -55,20 +58,29 @@ for state in state_list:
         print "There are no forcible rape statistics available for %s." % (selected_state)
 
     elif state_stats_2012[1] != 0:
-        crime_rate_2012 = (float(state_stats_2012[1] / float(state_stats_2012[2]))) * 100000
+        # grab state_stats for 2009 - 2011
         state_stats_2011 = state_total(city_list, selected_state, 17, 14)
         state_stats_2010 = state_total(city_list, selected_state, 27, 24)
         state_stats_2009 = state_total(city_list, selected_state, 37, 34)
-        crime_rate_2011 = (float(state_stats_2011[1] / float(state_stats_2011[2]))) * 100000
-        crime_rate_2010 = (float(state_stats_2010[1] / float(state_stats_2010[2]))) * 100000
-        crime_rate_2009 = (float(state_stats_2009[1] / float(state_stats_2009[2]))) * 100000
+
+        # calculate crime_rate for 2009 - 2012
+        crime_rate_2012 = crime_rate(state_stats_2012)
+        crime_rate_2011 = crime_rate(state_stats_2011)
+        crime_rate_2010 = crime_rate(state_stats_2010)
+        crime_rate_2009 = crime_rate(state_stats_2009)
+
+        # calculate change is crime rate between 2012 and 2011
         crime_rate_change = (crime_rate_2012 - crime_rate_2011) / abs(crime_rate_2011) * 100
+
         print "In 2012, there were %.2f counts of forcible rapes per 100,000 people in %s." % (crime_rate_2012, selected_state)
+
+        # Determine rise, fall, or no change in crime
         if crime_rate_change > 0:
             print "This is a %.2f percent increase from the rate of %.2f per 100,000 in 2011." % (abs(crime_rate_change),crime_rate_2011)
         elif crime_rate_change < 0:
             print "This is a %.2f percent decrease from the rate of %.2f per 100,000 in 2011." % (abs(crime_rate_change),crime_rate_2011)
         else:
             print "The 2011 rate is the same."
+
     else:
         print "Huh? Program error.\n You done messed up A-A-Ron!"
